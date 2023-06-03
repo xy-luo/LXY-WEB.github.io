@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="en-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>MapReduce 大数据计算框架 | XY Luo's World</title><meta name="author" content="XY Luo"><meta name="copyright" content="XY Luo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="1. 我的学习总结：MapReduce: a programming model and an associated implementation for processing and generating large data sets with a parallel, distributed algorithm on a cluster. 1.1 简述MR1.1.1 MR的完整过程：MapRe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce 大数据计算框架">
+<meta property="og:url" content="http://example.com/2022/09/08/Hadoop_MapReduce/index.html">
+<meta property="og:site_name" content="XY Luo&#39;s World">
+<meta property="og:description" content="1. 我的学习总结：MapReduce: a programming model and an associated implementation for processing and generating large data sets with a parallel, distributed algorithm on a cluster. 1.1 简述MR1.1.1 MR的完整过程：MapRe">
+<meta property="og:locale" content="en_CN">
+<meta property="og:image" content="http://example.com/img/logo.jpg">
+<meta property="article:published_time" content="2022-09-09T03:00:00.000Z">
+<meta property="article:modified_time" content="2023-02-22T07:38:25.361Z">
+<meta property="article:author" content="XY Luo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/logo.jpg"><link rel="shortcut icon" href="/img/logo.jpg"><link rel="canonical" href="http://example.com/2022/09/08/Hadoop_MapReduce/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MapReduce 大数据计算框架',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2023-02-21 23:38:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="XY Luo's World"><img class="site-icon" src="/img/logo.jpg"/><span class="site-name">XY Luo's World</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MapReduce 大数据计算框架</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-09-09T03:00:00.000Z" title="Created 2022-09-08 20:00:00">2022-09-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-02-22T07:38:25.361Z" title="Updated 2023-02-21 23:38:25">2023-02-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Big-Data/">Big Data</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MapReduce 大数据计算框架"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1-我的学习总结："><a href="#1-我的学习总结：" class="headerlink" title="1. 我的学习总结："></a>1. 我的学习总结：</h1><p><strong>MapReduce:</strong> a programming model and an associated implementation for processing and generating large data sets with a <strong>parallel</strong>, <strong>distributed</strong> algorithm on a cluster.</p>
+<h2 id="1-1-简述MR"><a href="#1-1-简述MR" class="headerlink" title="1.1 简述MR"></a>1.1 简述MR</h2><p><strong>1.1.1 MR的完整过程：</strong><br>MapReduce作为一个批量计算框架，整个过程包括：<strong>数据输入、数据处理、数据输出</strong></p>
+<ol>
+<li>任务启动：开发者通过控制台启动任务；</li>
+<li>初始化：从HDFS对数据进行切分；创建、提交作业；</li>
+<li>Yarn中的Resource Manager负责整个系统的资源管理和分配（1版中是JobTracker）；</li>
+<li>Map tasks：数据输入，根据自定的map()映射规则并行处理数据，输出<code>&lt;key, value&gt;</code>形式的中间数据结果；</li>
+<li>Shuffle：partition，并按照partition、key对中间结果进行排序合并，输出给reduce；</li>
+<li>Reduce tasks：对相同key的输入进行最终的处理，将结果写入文件中；</li>
+<li>通知任务完成</li>
+</ol>
+<p><strong>1.1.2 MapReduce main steps：</strong></p>
+<ol>
+<li>Map function</li>
+<li>Data shuffle</li>
+<li>Reduce</li>
+</ol>
+<h2 id="1-2-思考总结"><a href="#1-2-思考总结" class="headerlink" title="1.2 思考总结"></a>1.2 思考总结</h2><p><strong>1.2.1 能使用分布式并行编程的基础前提：</strong> 可分解，分解后任务无相关性，彼此独立。</p>
+<p><strong>1.2.2 分布式并行编程优点：</strong></p>
+<ol>
+<li>运行在由大量计算机(服务器)构成的集群上，实现并行处理能力；</li>
+<li>通过向集群中增加新的计算节点，实现集群计算能力扩充。</li>
+</ol>
+<p><strong>1.2.3 海量数据处理时存在难题：</strong></p>
+<ol>
+<li>单机难以处理计算所有的大量数据；—— 分而治之</li>
+<li>分而治之的思想会涉及：计算机节点之间数据的交互（外存文件数据I&#x2F;O访问制约系统性能）—— 计算靠近数据，减少数据传输。</li>
+</ol>
+<p><strong>1.2.4 减少数据传输方式</strong></p>
+<ol>
+<li><p>代码靠近数据：</p>
+<ul>
+<li>本地化数据处理（locality），尽可能在同一个计算机节点处理本地磁盘所存储数据；</li>
+<li>尽量选择数据所在DataNode启动Map Task；</li>
+<li>减少数据通信，提高计算效率；</li>
+</ul>
+</li>
+<li><p>数据靠近代码：</p>
+<ul>
+<li>本地没有数据处理时，尽量从同一机架&#x2F;最近其它节点传输数据进行处理（host选择算法）</li>
+</ul>
+</li>
+</ol>
+<p><strong>数据向计算靠拢</strong>(将数据拉到应用程序所在的机器)：需要大量的网络传输开销。<br><strong>计算向数据靠拢</strong>(将应用程序分发到数据所在机器)：将计算节点和存储节点放在一起运行，减少节点间的数据移动开销。</p>
+<p>跨节点拉取数据时，会消耗集群内部网络资源；<br>相比于内存，磁盘IO对性能的影响严重很多；</p>
+<p>不同的Map、Reduce任务间不会进行通信，所有的数据交换都是通过MapReduce框架自身实现；<br>Map Tasks的输出文件，Reduce Tasks的处理结果都是保存在分布式文件系统中的；<br>Map Tasks处理得到的中间结果保存在本地存储（如磁盘）中。</p>
+<br>
+
+<hr>
+<h1 id="2-Intro"><a href="#2-Intro" class="headerlink" title="2. Intro"></a>2. Intro</h1><h2 id="2-1-工作流程Overview"><a href="#2-1-工作流程Overview" class="headerlink" title="2.1 工作流程Overview"></a>2.1 工作流程Overview</h2><br>
+
+<p><img src="/img/bigdata_mr1.jpg" alt="img"></p>
+<ol>
+<li>通过<code>InputFormat模块</code>做Map前的预处理：验证输入格式并对文件进行切分生成<code>InputSplit</code>；</li>
+<li>通过<code>RecordReader(RR)</code>根据<code>InputSplit</code>中对信息处理、加载数据并转换为适合Map任务读取的<code>&lt;key, value&gt; pairs</code>输入给Map Tasks；</li>
+<li>Map Tasks根据用户自定义的映射规则，输出一系列的<code>&lt;key, value&gt;</code>作为中间结果(intermediate value)；</li>
+<li>Shuffle(为了让Reduce可以并行处理Map的结果)，对Map的输出进行分区(Partition)、排序(Sort)、合并(Combine)和归并(Merge)等操作，得到<code>&lt;key, value-list&gt;</code>形式的中间结果，交给Reduce进行处理；</li>
+<li>Reduce根据输入的中间数据结果<code>&lt;key, value-list&gt;</code>执行用户定义的逻辑汇总得到最后结果，输出给<code>OutputFormat</code>模块；</li>
+<li><code>OutputFormat</code>模块会验证输出目录是否已经存在，以及输出结果类型是否符合配置文件中的配置类型，将输出结果写入HDFS。</li>
+</ol>
+<br>
+
+<p>* 每个Map任务通常运行在数据存储的节点上，这样不需要额外的数据传输开销；<br>* 中间结果被分发到多个reduce任务，具有相同分区(partition)的key-value pairs会被送往同一个reduce任务；</p>
+<br>
+
+<h2 id="2-2-Shuffle-Overview"><a href="#2-2-Shuffle-Overview" class="headerlink" title="2.2 Shuffle Overview"></a>2.2 Shuffle Overview</h2><ul>
+<li>The process of moving map outputs to the reducers is known as shuffling.</li>
+<li>A different subset of the intermediate key space is assigned to each reduce node; these subsets, known as partitions, are the inputs to the reduce tasks.</li>
+</ul>
+<p><img src="/img/bigdata_mr2.png" alt="img"></p>
+<p>Shuffle过程有一部分在Map端，有一部分在Reduce端。</p>
+<ol>
+<li><p><strong>Map端</strong></p>
+<ul>
+<li>Map tasks的输出结果首先被写入缓存，进行分区(partition)；</li>
+<li>缓存满了，启动溢写操作把缓存中的数据写入磁盘文件；</li>
+<li>启用溢写操作时，对各分区里的数据根据key进行sort(默认会)&amp;combine(不设置默认不会)，再写入磁盘文件；</li>
+<li>每次溢写操作会生成一个新的磁盘文件，当一个Map Task全部结束时，这些溢写文件被merge生成一个大的磁盘文件；</li>
+<li>通知相应reducer领取(fetch)其需要处理的数据。</li>
+</ul>
+</li>
+<li><p><strong>Reduce端</strong></p>
+<ul>
+<li>Reducer从Map端的不同Map机器领取(fetch)属于自己需要处理的那部分数据，存放在自己所在机器的缓存区。（每个reducer会不断地通过RPC(Remote Procedure Call)向JobTracker询问map task是否完成）</li>
+<li>merge归并数据，缓存区数据量超过threshold，启动溢写操作，写入本地磁盘，此过程中具有相同key的pairs会被combine(如果设置了combine的话)。</li>
+<li>数据输入给reduce任务。</li>
+</ul>
+</li>
+</ol>
+<br>
+
+<hr>
+<h1 id="3-MapReduce各步Detail"><a href="#3-MapReduce各步Detail" class="headerlink" title="3. MapReduce各步Detail"></a>3. MapReduce各步Detail</h1><h2 id="3-1-Map-Map端Shuflle"><a href="#3-1-Map-Map端Shuflle" class="headerlink" title="3.1 Map + Map端Shuflle"></a>3.1 Map + Map端Shuflle</h2><h3 id="3-1-1-输入"><a href="#3-1-1-输入" class="headerlink" title="3.1.1 输入"></a>3.1.1 输入</h3><ol>
+<li>首先通过<code>InputFormat模块</code>做Map前的预处理：验证输入格式是否符合定义；将文件切分为逻辑上的多个<code>InputSplit</code>；<ul>
+<li><code>InputSplit</code>是对文件进行处理和运算的输入单位，只是一个逻辑概念，记录了要处理的数据的位置和长度，并未对文件做实际切割。</li>
+<li>Map task只读取split切片，split和block(HDFS的最小存储单位，默认64MB)可能是一对一，也可能一对多；但一个split只能对应一个文件的一个&#x2F;多个block，不能对应多个文件的block。</li>
+</ul>
+</li>
+<li>通过<code>RecordReader(RR)</code>根据<code>InputSplit</code>中对信息处理、加载数据并转换为适合Map任务读取对key-value pairs输入给Map Tasks；<ul>
+<li><code>RecordReader</code>记录阅读器，根据<code>split</code>的位置和长度，从HDFS各个块读取相关split，并转换成<code>&lt;k, v&gt;</code>的形式。</li>
+</ul>
+</li>
+<li>Map Tasks根据用户自定义的映射规则，输出一系列的<code>&lt;key, value&gt;</code>作为中间结果；</li>
+</ol>
+<h3 id="3-1-2-Partition"><a href="#3-1-2-Partition" class="headerlink" title="3.1.2 Partition"></a>3.1.2 Partition</h3><p>目的：分区是为了让Reduce可以并行处理Map Tasks的结果（最好各reduce node负载均衡，整体最高效率。）</p>
+<p>实现：</p>
+<ol>
+<li>MapReduce通过<code>Partitioner</code>接口对Map Tasks的输出结果<code>&lt;key, value&gt; pairs</code>进行分区；以决定<code>&lt;key, value&gt; pair</code>被哪个reduce处理；<ul>
+<li>默认采用的分区方式是对key进行Hash后，以Reducer Tasks的数量进行取模计算<code>hash(key) mod R</code>，把Map输出结果尽量均匀地分配给这R个Reducer并行处理。（HashPartitioner可以通过<code>job.setPartitionerClass(MyPartition.class)</code>自定义）。</li>
+</ul>
+</li>
+<li><code>&lt;key, value&gt;</code>以及partition的结果都被写入内存缓冲区。写入之前，key和value都会被序列化成字节数组。<ul>
+<li>缓冲区的作用是批量收集map结果，减少磁盘IO的影响。</li>
+</ul>
+</li>
+</ol>
+<h3 id="3-1-3-Spill溢写（sort-amp-combine）"><a href="#3-1-3-Spill溢写（sort-amp-combine）" class="headerlink" title="3.1.3 Spill溢写（sort &amp; combine）"></a>3.1.3 Spill溢写（sort &amp; combine）</h3><p><strong>spill：</strong><br>当缓存区满了，会启动溢写操作，把缓存区的数据写入磁盘文件，清空缓存。</p>
+<ul>
+<li>内存缓存区默认大小100MB，默认溢写率(spill.percent)为0.8，当缓存区数据达到阈值80%时，溢写开启，先锁定这80MB的内存，执行溢写，maptasks的输出结果可以往剩下20M的内存写入，互不影响。因此Map的内存缓冲区也叫环形缓冲区（两个指针的方向不变）。</li>
+<li>最后溢写出的小文件是分区的，同一个分区内保证key是有序的。</li>
+<li>spill由其他单独线程完成，不影响往缓存区写map结果的线程。</li>
+</ul>
+<p><strong>sort：</strong><br>在溢写时默认先按照partition，再按照key进行排序（quick sort）。</p>
+<p><strong>combine：</strong><br>主要是把形如&lt;k1, v1&gt;&lt;k1, v2&gt;这样的key值相同的数据进行计算(比如得到&lt;k1, v1+v2&gt;)，计算规则类似reduce的操作。一般累加、最大值场景可以在此使用combine操作。</p>
+<ul>
+<li>各分区内的combine操作是可选的，如果事先没有定义<code>Combiner</code>函数，则不进行combine操作；可通过<code>job.setCombinerClass(myCombine.class)</code>自定义combine操作。</li>
+<li>此处的combine操作可以减少需要溢写到磁盘和传输到reduce node的数据量。</li>
+<li>程序中有两个阶段可能执行combine操作：<ol>
+<li>map输出数据根据分区排序完成，在写入文件之前会执行一次combine（如果tasks中设置了这个操作的话）；</li>
+<li>map输出比较大，溢出文件个数&gt;3时(此值可通过属性min.num.spills.for.combine配置)，在merge过程(多个spill文件合并成一个大文件)中还会执行combine操作。</li>
+</ol>
+</li>
+<li>不是每种作业可以做combine，需满足以下条件：<ol>
+<li>reduce的输入输出类型一样，因为combine本质是reduce的操作；</li>
+<li>计算逻辑上，combine操作不影响计算及过，如累加，求和，最大值等</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-1-4-Merge"><a href="#3-1-4-Merge" class="headerlink" title="3.1.4 Merge"></a>3.1.4 Merge</h3><p>最终一个Map Task输出只有一个文件。当map很大时，每次溢写会产生一个spill_file，所以整个过程中会有多个spill_file，最终的结果输出之前会对多个中间过程进行多次spill_file的合并，即merge。</p>
+<ul>
+<li>生成文件过多时，会执行多次合并，每次最多能合并文件数默认为10，可通过属性<code>min.num.spills.for.combine</code>配置。</li>
+<li>多个spill_file merge时，会进行一次sort，排序算法是多路归并排序。</li>
+<li>merge时是否做combine，一是看是否设置了combine，二是溢出文件数是否&gt;&#x3D;3。</li>
+<li>最终merge成的大文件也是按分区顺序存储，且有一个对应的索引文件(file.out.index)，记录每个分区数据的起始位置，长度及压缩长度。</li>
+</ul>
+<p>所有溢写文件会生成一个大的溢写文件，其中所有key-value pairs也是经过分区和排队的；merge指对于具有相同key的pairs会被merge成一个新的key-value pairs，类似<code>&lt;k1, &lt;v1, v2, v3, ...vn&gt;&gt;</code>。</p>
+<h3 id="3-1-5-内存缓冲区"><a href="#3-1-5-内存缓冲区" class="headerlink" title="3.1.5 内存缓冲区"></a>3.1.5 内存缓冲区</h3><ul>
+<li><p>在map task的处理方法map()中，最后一步是通过<code>OutputCollector.collect(key, value)</code>或<code>context.write(key, value)</code> 输出map task生成的中间结果intermediate values。在相关<code>collect(key, value)</code>方法中，会调用<code>Partitioner.getPartition(K2 key, V2 value, int numPartitions)</code>方法获得输出的&lt;key, value&gt;对应的分区号（分区号即对应一个reduce node），然后将得到的<code>&lt;key, value, partition&gt;</code>暂时保存在内存中的MapOutputBuffer内部的环形数据缓冲区，该缓存区默认大小为100MB，可以通过参数<code>io.sort.mb</code>来调整其大小。</p>
+</li>
+<li><p>当缓存区数据使用率达到设置的threshold时，触发一次spill操作，将环形缓冲区的部分数据写到磁盘上，生成一个临时的Linux本地数据的spill文件，在磁盘上此时会生成很多的临时文件spill file。</p>
+</li>
+<li><p>当spill操作出发时，map输出还是会接着往剩下的空间写入，但是写满的空间会被锁定，直到数据溢出写入磁盘，当这部分溢出数据写完后，空出的内存空间可以接着被使用，形成像环一样的被循环使用的效果，所以叫做环形缓存区。</p>
+</li>
+<li><p>MaoOutputBuffer内部存数的数据采用了两个索引结构，涉及三个环形缓存区(kvoffset，kvindices，kvbuffer)。</p>
+</li>
+<li><p>写到缓冲区的数据采取压缩算法。</p>
+</li>
+<li><p>写入到本地磁盘时，对数据进行排序，实际上是对kvoffsets这个偏移量索引数据进行排序。</p>
+</li>
+</ul>
+<br>
+
+<h2 id="3-2-Reduce端Shuffle-Reduce"><a href="#3-2-Reduce端Shuffle-Reduce" class="headerlink" title="3.2 Reduce端Shuffle + Reduce"></a>3.2 Reduce端Shuffle + Reduce</h2><h3 id="3-2-1-Copy-拉取数据"><a href="#3-2-1-Copy-拉取数据" class="headerlink" title="3.2.1 Copy 拉取数据"></a>3.2.1 Copy 拉取数据</h3><p>Reduce进程启动数据copy线程<code>Fetcher</code>，通过HTTP方式请求map task所在的TaskTracker获取map task的输出文件。</p>
+<ul>
+<li>默认当MR作业的所有已执行完成的Map Tasks任务数超过总Map Tasks任务数的5%之后，JobTracker便开始调度执行Reduce Task任务。然后Reduce Task默认启动<code>mapred.reduce.parallel.copies</code>（默认为5）个MapOutCopier线程到已完成的Map Task任务节点上分别copy一份属于自己的数据。</li>
+<li>这些copy的数据会先保存在内存缓冲区中，当缓存区的使用率到达threshold时，写到磁盘上。</li>
+</ul>
+<p><strong>Reduce的内存缓冲区</strong><br>从map端copy来的数据先放在内存缓存区中。</p>
+<ul>
+<li>其大小控制是通过<code>mapred.job.shffle.input.buffer.percent(default 0.7)</code>来控制的（map的缓存区通过<code>io.sort.mb</code>来设定）；</li>
+<li>shuffle在reduce内存中的数据最多使用内存量为threshold(0.7) x <code>maxHeap of reduce task</code>。</li>
+</ul>
+<h3 id="3-2-2-Merge过程"><a href="#3-2-2-Merge过程" class="headerlink" title="3.2.2 Merge过程"></a>3.2.2 Merge过程</h3><p>这里的merge有三种形式：</p>
+<ol>
+<li>内存 -&gt; 内存</li>
+<li>内存 -&gt; 磁盘</li>
+<li>磁盘 -&gt; 磁盘</li>
+</ol>
+<ul>
+<li>默认第一种形式不启用。当内存使用量到达threshold时，启动内存-&gt;磁盘的merge。此处进行merge是因为从多个map端copy来的数据，并没有进行sort。这里和map端类似，实际上是溢写的过程，所以如果此过程设置了combiner，也是会启用的。这种merge方式直到没有map端的数据才结束。然后会启动第三种磁盘-&gt;磁盘merge生成最终的那个文件。</li>
+</ul>
+<h3 id="3-2-3-reduce输入文件"><a href="#3-2-3-reduce输入文件" class="headerlink" title="3.2.3 reduce输入文件"></a>3.2.3 reduce输入文件</h3><p>merge的最后会生成一个大文件，大多数情况是存在于磁盘中。当reducer输入文件已定，整个Shuffle阶段才算结束，然后就是Reducer执行，把最终结果写入HDFS。</p>
+<ul>
+<li>Reduce根据输入数据<code>&lt;key, value-list&gt;</code>执行用户定义的逻辑，输出结果给<code>OutputFormat</code>模块；</li>
+<li><code>OutputFormat</code>模块会验证输出目录是否已经存在，以及输出结果类型是否符合配置文件中的配置类型；都满足，就将输出结果写入HDFS。</li>
+</ul>
+<br>
+
+<h1 id="4-一些其他知识"><a href="#4-一些其他知识" class="headerlink" title="4. 一些其他知识"></a>4. 一些其他知识</h1><p>MapReduce采用Master&#x2F;Slave架构<br>Master：运行JobTracker（负责任务调度，监控它们的执行；并重新调度已失败任务）<br>Slave：运行TaskTracker（负责执行由JobTracker指派的任务）</p>
+<p><strong>Map function</strong></p>
+<ul>
+<li>Records from the data source (lines out of files, rows of a database, etc) are fed into the map function as <code>&lt;key, value&gt;</code> pairs: e.g. (filename, line).</li>
+<li><code>map()</code> produces one or more intermediate values along with an output key from the input.</li>
+</ul>
+<p><strong>Reduce function</strong></p>
+<ul>
+<li>After the map phase is over, all the intermediate values for a given output key are combined together into a list.</li>
+<li><code>reduce()</code> combines those intermediate values into one or more final values for that same output key.</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">XY Luo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/09/08/Hadoop_MapReduce/">http://example.com/2022/09/08/Hadoop_MapReduce/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/logo.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2023/02/12/Big%20Data%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/" title="Big Data Basic Knowledge总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Big Data Basic Knowledge总结</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">XY Luo</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xy-luo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xy-luo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:mavis.xy.luo@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.linkedin.com/in/xiaoyan-luo-83a086205/" target="_blank" title=""><i class="fab fa-linkedin"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%88%91%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-text">1. 我的学习总结：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E7%AE%80%E8%BF%B0MR"><span class="toc-text">1.1 简述MR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E6%80%9D%E8%80%83%E6%80%BB%E7%BB%93"><span class="toc-text">1.2 思考总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Intro"><span class="toc-text">2. Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8BOverview"><span class="toc-text">2.1 工作流程Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Shuffle-Overview"><span class="toc-text">2.2 Shuffle Overview</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-MapReduce%E5%90%84%E6%AD%A5Detail"><span class="toc-text">3. MapReduce各步Detail</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Map-Map%E7%AB%AFShuflle"><span class="toc-text">3.1 Map + Map端Shuflle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-%E8%BE%93%E5%85%A5"><span class="toc-text">3.1.1 输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-Partition"><span class="toc-text">3.1.2 Partition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-3-Spill%E6%BA%A2%E5%86%99%EF%BC%88sort-amp-combine%EF%BC%89"><span class="toc-text">3.1.3 Spill溢写（sort &amp; combine）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-4-Merge"><span class="toc-text">3.1.4 Merge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-5-%E5%86%85%E5%AD%98%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-text">3.1.5 内存缓冲区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Reduce%E7%AB%AFShuffle-Reduce"><span class="toc-text">3.2 Reduce端Shuffle + Reduce</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-Copy-%E6%8B%89%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-text">3.2.1 Copy 拉取数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2-Merge%E8%BF%87%E7%A8%8B"><span class="toc-text">3.2.2 Merge过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-3-reduce%E8%BE%93%E5%85%A5%E6%96%87%E4%BB%B6"><span class="toc-text">3.2.3 reduce输入文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86"><span class="toc-text">4. 一些其他知识</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/02/12/Big%20Data%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/" title="Big Data Basic Knowledge总结">Big Data Basic Knowledge总结</a><time datetime="2023-02-13T04:08:53.000Z" title="Created 2023-02-12 20:08:53">2023-02-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/09/08/Hadoop_MapReduce/" title="MapReduce 大数据计算框架">MapReduce 大数据计算框架</a><time datetime="2022-09-09T03:00:00.000Z" title="Created 2022-09-08 20:00:00">2022-09-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2023 By XY Luo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
